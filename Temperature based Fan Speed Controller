@@ -1,0 +1,92 @@
+                                        ARDUINO CODE
+#include <DHT.h>
+#include <LiquidCrystal.h>
+LiquidCrystal lcd(12,11,5,4,3,2);
+float temp;
+DHT dht(7,DHT22);
+#define fan 9
+void setup() {
+// giving fan current ...... Making fan pin 9 for output:
+ pinMode(fan,OUTPUT);
+ //Setting LCD's number of rows and column:
+ lcd.begin(16,3);
+ //printing message on the LCD
+ lcd.setCursor(3,1);
+ lcd.print("Project");
+ delay(1000);
+ lcd.clear();
+ dht.begin();
+ }
+
+void loop() {
+ if(analogRead(A0)>10)
+ {
+ lcd.setCursor(3,0);
+ lcd.print("Recording");
+ lcd.setCursor(2,1);
+ lcd.print("Temperature...");
+ delay(3000);
+ lcd.clear();
+ lcd.setCursor(0,2);
+ temp=dht.readTemperature();
+ lcd.setCursor(5,1);
+ lcd.print(temp);
+ lcd.print(" C");
+ delay(3000);
+ lcd.clear();
+  if(temp<20)
+  {
+    analogWrite(9,0);
+     lcd.setCursor(1,1);
+    lcd.print("Fan Off");
+    delay(2000);
+    lcd.clear();
+  }
+    else if(temp>20 && temp<=24)
+  {
+    analogWrite(fan, 51);
+     lcd.setCursor(1,1);
+    lcd.print("Fan Speed: 20%");
+    delay(2000);
+    lcd.clear();
+  }
+  else if(temp>=24 && temp<=26)
+  {
+    analogWrite(fan, 102);
+    lcd.setCursor(1,1);
+    lcd.print("Fan Speed: 40%");
+    delay(2000);
+    lcd.clear();
+  }
+  else if(temp>=26 && temp<=28)
+  {
+    analogWrite(fan, 153);
+     lcd.setCursor(1,1);
+    lcd.print("Fan Speed: 60%");
+    delay(2000);
+    lcd.clear();
+  }  
+  else if(temp>=28 && temp<=30)
+  {
+    analogWrite(fan, 200);
+     lcd.setCursor(1,1);
+    lcd.print("Fan Speed: 80%");
+    delay(2000);
+    lcd.clear();
+  }  
+  else if(temp>=30)
+  {
+    analogWrite(fan, 255);
+     lcd.setCursor(1,1);
+    lcd.print("Fan Speed: 100%");
+    delay(2000);
+    lcd.clear();
+  }  
+ }
+ else{
+   lcd.setCursor(1,1);
+    lcd.print("No one sitting");
+     analogWrite(9,0);
+    delay(3000);
+  }
+}
